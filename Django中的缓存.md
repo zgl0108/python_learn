@@ -8,10 +8,10 @@
 
 2.Django提供了6种缓存方式
 
-* 开发调试
-* 内存
-* 文件
-* 数据库
+* 开发调试缓存
+* 内存缓存
+* 文件缓存
+* 数据库缓存
 * Memcache缓存(使用python-memcached模块)
 * Memcache缓存(使用pylibmc模块)
 
