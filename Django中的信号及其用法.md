@@ -96,6 +96,7 @@ Django中提供了"信号调度",用于在框架执行操作时解耦.
     import django.dispatch
     
     action=django.dispatch.Signal(providing_args=["aaaa","bbbb"])
+	
 2. 注册信号 
 
 项目应用下面的`__init__.py`文件内容:
@@ -108,6 +109,7 @@ Django中提供了"信号调度",用于在框架执行操作时解耦.
         print("pre_save_msg:",sender,kwargs)
         
     action.connect(pre_save_func)
+	
 3. 触发信号
 
 views视图函数内容:
