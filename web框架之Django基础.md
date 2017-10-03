@@ -54,7 +54,7 @@ Django是一种遵循MVC开发模式的框架.
     python manage.py shell
     
     #创建应用程序,确保和manage.py是同一个目录
-    python manage.py startap polls
+    python manage.py startapp polls
     
     #启动Django,端口使用Django默认的8000
     python manage.py runserver
