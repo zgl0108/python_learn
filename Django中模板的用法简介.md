@@ -111,27 +111,27 @@
 例子:
 ```
     #value1="aBcDe"
-    {{ value1|upper }}                      #输入为"ABCDE"
+    {{ value1|upper }}                      #把所有的结果渲染为大写，输出为"ABCDE"
     
     #value2=5
-    {{ value2|add:3 }}                      #输入为8
+    {{ value2|add:3 }}                      #把结果中的结果加上加上指定值输入为8
     
     #value3='he  llo wo r ld'
-    {{ value3|cut:' ' }}                    #输入为"helloworld"
+    {{ value3|cut:' ' }}                    #去除结果中的指定字符，输入为"helloworld"
     
     #value4="hello world"
-    {{ value4|capfirst }}                   #输入为"Hello world"
+    {{ value4|capfirst }}                   #查询结果首字母大写，输入为"Hello world"
     
     #import datetime
     #value5=datetime.datetime.now()
-    {{ value5|date:'Y-m-d' }}               #输入为"2017-08-20"
+    {{ value5|date:'Y-m-d' }}               #设定前端页面的显示时间为"2017-08-20"格式
     
     #value6=[]
-    {{ value6 }}#输入为"[]"
-    {{ value6|default:'空的' }}               #输入为"空的"
+    {{ value6 }}                            #从数据库的查询结果为空是在前端页面显示为"[]"
+    {{ value6|default:'空的' }}               #从数据库的查询结果为空是在前端页面显示为default的值 
     
     #value7='<a href="#">click</a>'
-    {{ value7 }}#输入为"<a href="#">click</a>"
+    {{ value7 }}                            #输入为"<a href="#">click</a>"
     {{ value7|safe }}<br>                   # 如果不想标签被渲染,加safe即可
     {{ value7|striptags }} 
     
@@ -148,6 +148,9 @@
     #value9='http://www.baidu.com/?a=1&b=3'
     {{ value9|urlencode }}
     value9='hello I am Tony'
+    
+    {{ value10|tuncatewords:3 }}            # 如果最后的结果是一个长字符串时，显示前3个单词，剩余的用点号(.)表示
+    {{ value10|tuncatechars:20 }}            # 如果最后的结果是一个长字符串时，显示前20个字母，剩余的用点号(.)表示
 ```
 标签`(tag)`的使用(使用大括号和百分比的组合来表示使用`tag`)
 
@@ -161,17 +164,17 @@
 
 例子:
 
-	{% if num >= 100 and 8 %}
-		{% if num > 200 %}
-			<p>num大于200</p>
-		{% else %}
-			<p>num大于100小于200</p>
-		{% endif %}
-	{% elif num < 100%}
-		<p>num小于100</p>
-	{% else %}
-		<p>num等于100</p>
-	{% endif %}
+    {% if num >= 100 and 8 %}
+        {% if num > 200 %}
+            <p>num大于200</p>
+        {% else %}
+            <p>num大于100小于200</p>
+        {% endif %}
+    {% elif num < 100%}
+        <p>num小于100</p>
+    {% else %}
+        <p>num等于100</p>
+    {% endif %}
 
 `{% if %}`标签接受单个`and`，`or`或者`not`来测试多个变量值或者否定一个给定的变量
 
@@ -197,16 +200,18 @@
 	{% for obj in list reversed %}
 	...
 	{% endfor %}
-{% for %}标签可以嵌套：
+	
+`{% for %}`标签可以嵌套：
 
-	{% for country in countries %}
-		<h1>{{ country.name }}</h1>
-		<ul>
-		 {% for city in country.city_list %}
-			<li>{{ city }}</li>
-		 {% endfor %}
-		</ul>
-	{% endfor %}
+    {% for country in countries %}
+        <h1>{{ country.name }}</h1>
+        <ul>
+         {% for city in country.city_list %}
+            <li>{{ city }}</li>
+         {% endfor %}
+        </ul>
+    {% endfor %}
+    
 `for`循环不支持中断循环，也不支持`continue`语句
 
 `{% for %}`标签内置了一个`forloop`模板变量，这个变量含有关于循环的属性
@@ -218,18 +223,18 @@
 	forloop.first           返回一个布尔值,当第一次循环时值为True,其余为False	
 例子:
 ```
-	{% for item in todo_list %}
-		<p>{{ forloop.counter }}: {{ item }}</p>
-	{% endfor %}
-
-	{% for object in objects %}   
-		 {% if forloop.first %}
-		 	<li class="first">
-		 {% else %}
-		 	<li>
-		 {% endif %}   
-		 	{{ object }}</li>  
-	{% endfor %}
+    {% for item in todo_list %}
+        <p>{{ forloop.counter }}: {{ item }}</p>
+    {% endfor %}
+    
+    {% for object in objects %}   
+         {% if forloop.first %}
+            <li class="first">
+         {% else %}
+            <li>
+         {% endif %}   
+            {{ object }}</li>  
+    {% endfor %}
 ```
 `forloop`变量只能在循环中得到，当模板解析器到达`{% endfor %}`时`forloop`变量就会消失
 
@@ -242,12 +247,11 @@
  ***2.3.3 {% empty %}***
 用法:
 
-	{{li }}
-		  {%  for i in li %}
-			  <li>{{ forloop.counter0 }}----{{ i }}</li>
-		  {% empty %}
-			  <li>this is empty!</li>
-		  {% endfor %}
+      {%  for i in li %}        # 从数据库中查询结果有数据时正常显示<li></li>标签中的内容
+          <li>{{ forloop.counter0 }}----{{ i }}</li>
+      {% empty %}               # 从数据库中的查询结果为空时，显示的是empty中的内容
+          <li>this is empty!</li>
+      {% endfor %}
 		  
  ***2.3.4 {% csrf_token %}csrf_token标签***
 
@@ -259,6 +263,8 @@
 
 ***2.3.5 {% url %}***			#引用路由配置的地址
 
+在路由映射表中，为一个路由映射配置了别名的时候使用
+
 ***2.3.6 {% verbatim %}***	#禁止render
 用法:
 
@@ -266,7 +272,9 @@
 		{{ hello }}
 	{% endverbatim %}
 ***2.3.7 {% load %}加载标签库***
- 
+
+加载静态文件或自定义filter时使用
+
 ***2.3.8 自定义filter和simply_tag***
  
 * 1、在app中创建templatetags模块

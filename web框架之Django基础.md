@@ -409,7 +409,6 @@ HTTP请求中产生两个核心对象
             return HttpResponse('账号或密码错误')
         return render(request_info,'register.html')
     
-    
     def login(request_info):
         return render(request_info,'login.html')
 ```
