@@ -188,7 +188,7 @@ User对象的方法
                     new_user=User.objects.create_user(username=username,password=password)	#创建新用户 
                     new_user.save()
                 
-                return redirect("/index/")
+                    return redirect("/index/")
             
             return render(request,"login.html",{"msg":msg})
 
