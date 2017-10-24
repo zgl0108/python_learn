@@ -8,9 +8,9 @@
 
 单例模式的要点有三个:
 
-某个类只能有一个实例
-这个类必须自行创建其唯一实例
-这个类必须自行向整个系统提供这个唯一实例.
+* 某个类只能有一个实例
+* 这个类必须自行创建其唯一实例
+* 这个类必须自行向整个系统提供这个唯一实例.
 
 在python中,单例模式有三种实现方式:
 
@@ -53,53 +53,47 @@
     True
     >>> print(cls1 is cls2)
     True
-
     
-方法二,使用模块
-
-其实，Python 的模块就是天然的单例模式，因为模块在第一次导入时，会生成 .pyc 文件，
-
-当第二次导入时，就会直接加载 .pyc 文件，而不会再次执行模块代码。
-
-因此，我们只需把相关的函数和数据定义在一个模块中，就可以获得一个单例对象了。如果我们真的想要一个单例类，可以考虑这样做：
-
-    # mysingleton.py
-    class My_Singleton(object):
-        def foo(self):
-            pass
-     
-    my_singleton = My_Singleton()
-
-将上面的代码保存在文件 mysingleton.py 中，然后这样使用：
-
-    from mysingleton import my_singleton
-     
-    my_singleton.foo()
-    
-方法三,使用装饰器（decorator）
+方法二,使用装饰器（decorator）
 
 我们知道，装饰器（decorator）可以动态地修改一个类或函数的功能。这里，我们也可以使用装饰器来装饰某个类，使其只能生成一个实例，代码如下：
 
-    from functools import wraps
-     
     def singleton(cls):
-        instances = {}
-        @wraps(cls)
-        def getinstance(*args, **kw):
+        instances={}
+    
+        def getinstance(*args,**kwargs):
             if cls not in instances:
-                instances[cls] = cls(*args, **kw)
+                instances[cls]=cls(*args,**kwargs)
+    
             return instances[cls]
         return getinstance
-     
+    
     @singleton
     class MyClass(object):
-    a = 1
+        a=1
 
 在上面，我们定义了一个装饰器 singleton，它返回了一个内部函数 getinstance，该函数会判断某个类是否在字典 instances 中，
 
 如果不存在，则会将 cls 作为 key，cls(*args, **kw) 作为 value 存到 instances 中，否则，直接返回 instances[cls]。
 
-方法四,使用元类（metaclass）
+使用上面定义的类实例化两个对象,比较两个对象
+
+    cls1=MyClass()
+    cls2=MyClass()
+    
+    print(cls1 == cls2)
+    print(cls1 is cls2)
+    
+    print(id(cls1))
+    print(id(cls2))
+
+得到的结果为:
+
+    True
+    True
+    42052912
+    42052912
+方法三,使用元类（metaclass）
 
 元类（metaclass）可以控制类的创建过程，它主要做三件事：
 
