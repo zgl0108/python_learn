@@ -102,22 +102,39 @@
 返回修改后的类
 
 用元类实现单例模式的代码如下：
-
+```
     class Singleton(type):
-        _instances = {}
-        def __call__(cls, *args, **kwargs):
-            if cls not in cls._instances:
-                cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-            return cls._instances[cls]
-     
-    # Python2
-    class MyClass(object):
-        __metaclass__ = Singleton
-     
-    # Python3
-    # class MyClass(metaclass=Singleton):
-    #    pass
+        _inst = {}
+    
+        def __call__(self, *args, **kw):
+            if self not in self._inst:
+                self._inst[self] = super(Singleton, self).__call__(*args, **kw)
+            return self._inst[self]
+    
+    class MyClass1(metaclass=Singleton):
+        def __init__(self):
+            self.xx = 0
+    
+        def getval(self):
+            return self.xx
+    
+        def setval(self, val):
+            self.xx = val
+    
+    
+    cls1=MyClass1()
+    cls2=MyClass1()
+    
+    print(id(cls1))
+    print(id(cls2))
+    
+    print(cls1 == cls2)
+```
+得到的结果为:
 
+    32512208
+    32512208
+    True
 小结
 
 Python 的模块是天然的单例模式，这在大部分情况下应该是够用的，当然，我们也可以使用装饰器、元类等方法
